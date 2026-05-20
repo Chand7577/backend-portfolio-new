@@ -25,14 +25,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/featured', async (req, res) => {
-  try {
-    const projects = await Project.find({ featured: true }).sort({ createdAt: -1 });
-    res.json(projects);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
-});
+// Removed /featured endpoint per user request
 
 router.get('/:id', async (req, res) => {
   try {
@@ -64,7 +57,7 @@ router.post('/', auth, (req, res, next) => {
     console.log('Incoming Project Data:', req.body);
     console.log('Uploaded Files:', req.files);
 
-    const { title, description, category, tags, liveUrl, githubUrl, featured } = req.body;
+    const { title, description, category, tags, liveUrl } = req.body;
 
     // Build image array from Cloudinary upload results
     const images = (req.files || []).map((file, i) => ({
@@ -79,8 +72,6 @@ router.post('/', auth, (req, res, next) => {
       category,
       tags:      tags ? String(tags).split(',').map(t => t.trim()).filter(Boolean) : [],
       liveUrl:   liveUrl   || '',
-      githubUrl: githubUrl || '',
-      featured:  featured === 'true' || featured === true,
       images,
     });
 
@@ -111,7 +102,7 @@ router.put('/:id', auth, (req, res, next) => {
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
 
-    const { title, description, category, tags, liveUrl, githubUrl, featured, removeImages } = req.body;
+    const { title, description, category, tags, liveUrl, removeImages } = req.body;
 
     // ── Delete specified images from Cloudinary ──
     const toRemove = Array.isArray(removeImages)
@@ -140,8 +131,7 @@ router.put('/:id', auth, (req, res, next) => {
     if (category    !== undefined) project.category    = category;
     if (tags        !== undefined) project.tags        = tags.split(',').map(t => t.trim()).filter(Boolean);
     if (liveUrl     !== undefined) project.liveUrl     = liveUrl;
-    if (githubUrl   !== undefined) project.githubUrl   = githubUrl;
-    if (featured    !== undefined) project.featured    = featured === 'true' || featured === true;
+// githubUrl and featured fields removed
 
     await project.save();
     res.json(project);

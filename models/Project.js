@@ -1,9 +1,10 @@
+// Updated Project model - removed githubUrl and featured fields
 const mongoose = require('mongoose');
 
 const imageSchema = new mongoose.Schema({
   url:       { type: String, required: true }, // Cloudinary secure URL
   publicId:  { type: String, required: true }, // Cloudinary public_id (needed for deletion)
-  caption:   { type: String, default: '' },
+
 });
 
 const projectSchema = new mongoose.Schema(
@@ -12,9 +13,9 @@ const projectSchema = new mongoose.Schema(
     description: { type: String, required: true },
     category:    { type: String, required: true, trim: true },
     tags:        { type: [String], default: [] },
-    liveUrl:     { type: String, default: '' },
-    githubUrl:   { type: String, default: '' },
-    featured:    { type: Boolean, default: false },
+  
+    // githubUrl field removed per request
+    // featured field removed per request
     images:      { type: [imageSchema], default: [] }, // Multiple Cloudinary images
   },
   { timestamps: true }
