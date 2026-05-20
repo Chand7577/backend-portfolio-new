@@ -57,7 +57,7 @@ router.post('/', auth, (req, res, next) => {
     console.log('Incoming Project Data:', req.body);
     console.log('Uploaded Files:', req.files);
 
-    const { title, description, category, tags, liveUrl } = req.body;
+    const { title, description, category, tags, liveUrl, testimonialLink, totalMembers, keyFunctionalities } = req.body;
 
     // Build image array from Cloudinary upload results
     const images = (req.files || []).map((file, i) => ({
@@ -70,8 +70,11 @@ router.post('/', auth, (req, res, next) => {
       title,
       description,
       category,
-      tags:      tags ? String(tags).split(',').map(t => t.trim()).filter(Boolean) : [],
-      liveUrl:   liveUrl   || '',
+      tags:               tags ? String(tags).split(',').map(t => t.trim()).filter(Boolean) : [],
+      liveUrl:            liveUrl || '',
+      testimonialLink:    testimonialLink || '',
+      totalMembers:       totalMembers || '',
+      keyFunctionalities: keyFunctionalities || '',
       images,
     });
 
@@ -102,7 +105,10 @@ router.put('/:id', auth, (req, res, next) => {
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
 
-    const { title, description, category, tags, liveUrl, removeImages } = req.body;
+    console.log("=== API PUT UPDATE REQUEST ===");
+    console.log("req.body:", req.body);
+    const { title, description, category, tags, liveUrl, testimonialLink, totalMembers, keyFunctionalities, removeImages } = req.body;
+    console.log("Parsed fields:", { title, description, category, tags, liveUrl, testimonialLink, totalMembers, keyFunctionalities });
 
     // ── Delete specified images from Cloudinary ──
     const toRemove = Array.isArray(removeImages)
@@ -126,14 +132,18 @@ router.put('/:id', auth, (req, res, next) => {
     project.images.push(...newImages);
 
     // ── Update scalar fields ──
-    if (title       !== undefined) project.title       = title;
-    if (description !== undefined) project.description = description;
-    if (category    !== undefined) project.category    = category;
-    if (tags        !== undefined) project.tags        = tags.split(',').map(t => t.trim()).filter(Boolean);
-    if (liveUrl     !== undefined) project.liveUrl     = liveUrl;
-// githubUrl and featured fields removed
+    if (title              !== undefined) project.title              = title;
+    if (description        !== undefined) project.description        = description;
+    if (category           !== undefined) project.category           = category;
+    if (tags               !== undefined) project.tags               = tags.split(',').map(t => t.trim()).filter(Boolean);
+    if (liveUrl            !== undefined) project.liveUrl            = liveUrl;
+    if (testimonialLink    !== undefined) project.testimonialLink    = testimonialLink;
+    if (totalMembers       !== undefined) project.totalMembers       = totalMembers;
+    if (keyFunctionalities !== undefined) project.keyFunctionalities = keyFunctionalities;
 
+    console.log("Project document before save:", project);
     await project.save();
+    console.log("Project document after save:", project);
     res.json(project);
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });

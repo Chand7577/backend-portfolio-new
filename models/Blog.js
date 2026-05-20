@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  category: { type: String, required: true },
+  category: { type: String },
   date: { type: String, default: () => new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) },
   image: { type: String, required: true },
   imagePublicId: { type: String },
-  content: { type: String, required: true },
+  content: { type: String },
   tags: [String],
 }, { timestamps: true });
 
