@@ -18,7 +18,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   // Netlify deployment — update this if your Netlify URL changes
-  'https://grandeurnet.netlify.app',
+  'https://proto-portfolio12.netlify.app',
 ].filter(Boolean);
 
 app.use(cors({
