@@ -3,9 +3,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+
 dotenv.config();
 
+
+
 const app = express();
+// add with your other requires at the top
+const googleReviewsRoute = require('./routes/googleReviewsRoute');
 
 // Middleware
 const allowedOrigins = [
@@ -45,6 +50,15 @@ app.get('/api/debug/cloudinary', (req, res) => {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME ? (process.env.CLOUDINARY_CLOUD_NAME.substring(0, 3) + '...') : 'missing'
   });
 });
+
+
+
+
+
+
+
+// add with your other routes
+app.use('/api/google-reviews', googleReviewsRoute);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
