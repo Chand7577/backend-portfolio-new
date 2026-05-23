@@ -16,7 +16,9 @@ const googleReviewsRoute = require('./routes/googleReviewsRoute');
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  // Netlify deployment — update this if your Netlify URL changes
+  'https://grandeurnet.netlify.app',
 ].filter(Boolean);
 
 app.use(cors({
