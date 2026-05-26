@@ -17,6 +17,15 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'portfolio/projects',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    // Auto-compress & convert to WebP/AVIF for future uploads
+    transformation: [
+      { quality: 'auto:good', fetch_format: 'auto', flags: 'strip_profile' },
+    ],
+    // Pre-generate a web-optimised 1200px wide variant
+    eager: [
+      { width: 1200, crop: 'limit', quality: 'auto:good', fetch_format: 'auto' },
+    ],
+    eager_async: true,
   },
 });
 
